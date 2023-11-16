@@ -33,6 +33,28 @@ class _EjaraAppState extends State<EjaraApp> {
       theme: ThemeData(
         scaffoldBackgroundColor: const Color(0xfff9f9fb),
         appBarTheme: const AppBarTheme(elevation: 0, backgroundColor: Colors.transparent),
+        inputDecorationTheme: InputDecorationTheme(          
+          fillColor: Colors.transparent,
+          contentPadding: const EdgeInsets.all(10),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(
+              color: Color(0xffb3b4cd),
+            ),
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(
+              color: Color(0xffb3b4cd),
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(
+              color: Color(0xffb3b4cd),
+            ),
+          ),
+        ),
       ),
       builder: (context, child) {
         final mQuery = MediaQuery.of(context);

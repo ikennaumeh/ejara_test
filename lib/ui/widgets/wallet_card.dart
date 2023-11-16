@@ -50,7 +50,7 @@ class WalletCard extends StatelessWidget {
                 TextSpan(
                   text: "20,000",
                   style: TextStyle(
-                    color: Color(0xff494d86),
+                    color: Color(0xff393e7c),
                     fontSize: 22,
                     fontWeight: FontWeight.w600
                   ),

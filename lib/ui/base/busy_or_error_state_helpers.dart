@@ -29,6 +29,9 @@ mixin BusyOrErrorStateHelpers on ChangeNotifier {
   /// Returns the error existence status of the ViewModel
   bool get hasError => error(this);
 
+  /// Returns the error status of the ViewModel
+  dynamic get modelError => error(this);
+
   /// Sets the error state for the object equal to the value passed in and notifies Listeners
   /// If you're using a primitive type the value SHOULD NOT BE CHANGED, since Hashcode uses == value
   void setErrorForObject(Object? object, bool value) {
@@ -37,7 +40,8 @@ mixin BusyOrErrorStateHelpers on ChangeNotifier {
   }
 
   /// Sets the error for the ViewModel
-  void setError(bool error) {
+  /// Sets the error for the ViewModel
+  void setError(dynamic error) {
     setErrorForObject(this, error);
   }
 }

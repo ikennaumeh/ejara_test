@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class PaymentMethodTile extends StatelessWidget {
-  final String title, subtitle;
+  final String? title, subtitle;
   final IconData icon;
   final VoidCallback? ontap;
 
@@ -15,7 +15,7 @@ class PaymentMethodTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: ontap,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 15),
@@ -38,7 +38,7 @@ class PaymentMethodTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  title,
+                  title ?? "--",
                   style: TextStyle(
                     color: const Color(0xff494d86).withOpacity(.7),
                      fontSize: 15, 
@@ -48,7 +48,7 @@ class PaymentMethodTile extends StatelessWidget {
                   height: 5,
                 ),
                 Text(
-                  subtitle,
+                  subtitle ?? "--",
                   style: const TextStyle(color: Color(0xffa5a7c3), fontSize: 14),
                 ),
               ],

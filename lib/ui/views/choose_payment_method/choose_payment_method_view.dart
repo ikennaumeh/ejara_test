@@ -1,5 +1,6 @@
 import 'package:ejara_test/ui/bottomsheets/app_bottom_sheet.dart';
 import 'package:ejara_test/ui/views/choose_payment_method/choose_payment_method_vm.dart';
+import 'package:ejara_test/ui/widgets/full_screen_loading_indicator.dart';
 import 'package:ejara_test/ui/widgets/one_action_app_bar.dart';
 import 'package:ejara_test/ui/widgets/payment_method_tile.dart';
 import 'package:ejara_test/ui/widgets/wallet_card.dart';
@@ -19,16 +20,19 @@ class _ChoosePaymentMethodViewState extends State<ChoosePaymentMethodView> with 
   @override
   void initState() {
     viewModel = ChoosePaymentMethodVM();
+    viewModel.getStarted();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xfff9f9fb),
       body: ChangeNotifierProvider<ChoosePaymentMethodVM>(
         create: (_) => viewModel,
         child: Consumer<ChoosePaymentMethodVM>(builder: (_, model, __) {
+          if (model.isBusy) {
+            return const FullScreenLoadingIndicator();
+          }
           return SafeArea(
             child: SingleChildScrollView(
               child: Column(
@@ -43,7 +47,7 @@ class _ChoosePaymentMethodViewState extends State<ChoosePaymentMethodView> with 
                     style: TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: 27,
-                      color: Color(0xff494d86),
+                      color: Color(0xff393e7c),
                     ),
                   ),
                   const WalletCard(),
@@ -57,99 +61,50 @@ class _ChoosePaymentMethodViewState extends State<ChoosePaymentMethodView> with 
                         style: TextStyle(
                           fontWeight: FontWeight.w700,
                           fontSize: 16,
-                          color: Color(0xff494d86),
+                          color: Color(0xff393e7c),
                         ),
                       ),
                     ),
                   ),
-                  const PaymentMethodTile(
-                    title: "Cash payment",
-                    subtitle: "Fees: Offer",
-                    icon: Icons.currency_bitcoin_rounded,
-                  ),
-                  PaymentMethodTile(
-                    title: "Mobile money",
-                    subtitle: "Fees: 200CFA",
-                    icon: Icons.phone_android,
-                    ontap: () async {
-                      final result = await showAppBottomSheet();
-                      if (result == true) {
-                        model.routeToNextScreen();
-                      }
-                    },
-                  ),
-                  const PaymentMethodTile(
-                    title: "Bank transfer",
-                    subtitle: "Fees: Variable",
-                    icon: Icons.account_balance,
-                  ),
-                  const PaymentMethodTile(
-                    title: "Credit card",
-                    subtitle: "Fees: Variable",
-                    icon: Icons.credit_card,
-                  ),
-                  const PaymentMethodTile(
-                    title: "Crypto-currency",
-                    subtitle: "Fees:",
-                    icon: Icons.wallet,
-                  ),
+                  Builder(builder: (context) {
+                    if (model.paymentTypeList.isEmpty) {
+                      return const Text("Empty list");
+                    } else if (model.hasError) {
+                      return Text(model.modelError);
+                    }
+                    return ListView.separated(
+                      itemCount: model.paymentTypeList.length,
+                      itemBuilder: (c, i) {
+                        final payment = model.paymentTypeList.elementAt(i);
+                        return PaymentMethodTile(
+                          title: payment.titleEn,
+                          subtitle: payment.descriptionEn,
+                          icon: switch (i) {
+                            0 => Icons.currency_bitcoin_sharp,
+                            1 => Icons.phone_android_outlined,
+                            _ => Icons.account_balance
+                          },
+                          ontap: () async {
+                            final result = await showAppBottomSheet();
+                            if (result == true) {
+                              model.routeToNextScreen();
+                            }
+                          },
+                        );
+                      },
+                      separatorBuilder: (c, i) {
+                        return const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          child: Divider(),
+                        );
+                      },
+                    );
+                  }),
                 ],
               ),
             ),
           );
         }),
-      ),
-    );
-  }
-}
-
-class PaymentOptionCard extends StatelessWidget {
-  final String title, subtitle;
-
-  const PaymentOptionCard({
-    required this.title,
-    required this.subtitle,
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-      margin: const EdgeInsets.only(left: 20, right: 20, bottom: 10),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12), boxShadow: [
-        BoxShadow(color: Colors.grey.withOpacity(.1), spreadRadius: 1, blurRadius: 10, offset: const Offset(1, 3))
-      ]),
-      child: Row(
-        children: [
-          Container(
-            height: 15,
-            width: 15,
-            decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white,
-                border: Border.all(
-                  color: const Color(0xff494d86),
-                )),
-            margin: const EdgeInsets.only(left: 5, right: 10),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: TextStyle(color: const Color(0xff494d86).withOpacity(.7), fontSize: 15, fontWeight: FontWeight.w500),
-              ),
-              const SizedBox(
-                height: 3,
-              ),
-              Text(
-                subtitle,
-                style: const TextStyle(color: Color(0xffa5a7c3), fontSize: 14),
-              ),
-            ],
-          ),
-        ],
       ),
     );
   }

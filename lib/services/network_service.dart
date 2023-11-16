@@ -4,16 +4,19 @@ import 'package:ejara_test/services/interceptor/app_interceptor.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 
-class NetworkService{
+class NetworkService {
   final _logger = Logger("NetworkService");
   late final Dio dio;
 
-  static final String _baseUrl = Environment.current.baseUrl;
+  static final String _baseUrlV1 = Environment.current.baseUrlV1;
+  static final String _baseUrlV2 = Environment.current.baseUrlV2;
+
+  bool useV2 = false;
 
   NetworkService() {
     dio = Dio(
       BaseOptions(
-        baseUrl: _baseUrl,
+        baseUrl: useV2 ? _baseUrlV2 : _baseUrlV1,
         connectTimeout: const Duration(seconds: 30),
       ),
     );
@@ -36,7 +39,9 @@ class NetworkService{
   Future get(
     String path, {
     Map<String, dynamic>? queryParameters,
+    bool isV2 = true,
   }) async {
+    useV2 = isV2;
     try {
       Response response = await dio.get(
         path,
@@ -50,7 +55,6 @@ class NetworkService{
       _logger.severe('Could not make a request to this path: $path', e, s);
     }
   }
-
 
   Future post(
     String path, {
@@ -72,7 +76,5 @@ class NetworkService{
     }
   }
 
-  void _handleError(DioException e){
-
-  }
+  void _handleError(DioException e) {}
 }
