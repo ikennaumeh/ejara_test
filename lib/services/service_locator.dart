@@ -1,17 +1,19 @@
+import 'package:ejara_test/navigation/router.dart';
+import 'package:ejara_test/services/network_service.dart';
+import 'package:ejara_test/services/secure_storage_service.dart';
+import 'package:ejara_test/services/service_api.dart';
 import 'package:get_it/get_it.dart';
-import 'package:logging/logging.dart';
-
 
 GetIt get serviceLocator => GetIt.instance;
 
-extension ServiceLocator on GetIt {
+Future<void> setupLocator({
+  String? environment,
+}) async {
 
-  Future<void> ensureReady<T extends Object>() async {
-    try {
-      await isReady<T>();
-    } catch (e) {
-      // Means the dependency was ready
-      Logger("ServiceLocator").info('$T is already initialized');
-    }
-  }
+// Register dependencies
+  serviceLocator.registerLazySingleton(() => AppLevelRouter());
+  serviceLocator.registerLazySingleton(() => SecureStorageService());
+  serviceLocator.registerLazySingleton(() => NetworkService());
+  serviceLocator.registerLazySingleton(() => ServiceApi());
 }
+

@@ -1,15 +1,12 @@
 import 'dart:math';
-
 import 'package:ejara_test/navigation/app_routes.dart';
 import 'package:ejara_test/navigation/navigator_key.dart';
-import 'package:ejara_test/services/manager/dependency_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logging/logging.dart';
 
 class EjaraApp extends StatefulWidget {
-  final DependencyManager dependencyManager;
-  const EjaraApp({super.key, required this.dependencyManager});
+  const EjaraApp({super.key});
 
   @override
   State<EjaraApp> createState() => _EjaraAppState();
@@ -21,7 +18,6 @@ class _EjaraAppState extends State<EjaraApp> {
 
   @override
   void initState() {
-    _initDependencies();
     _initSystemUI();
     super.initState();
   }
@@ -78,16 +74,6 @@ class _EjaraAppState extends State<EjaraApp> {
     );
   }
 
-  Future<void> _initDependencies() async {
-    await widget.dependencyManager.init().then((_) {
-      setState(() {
-        dependencyLoaded = true;
-      });
-    }).catchError((e) {
-      logger.severe('Error while loading dependencies: ${e.toString()}');
-    });
-  }
-
   void _initSystemUI() {
     // Configure preferred orientation
     SystemChrome.setPreferredOrientations([
@@ -100,11 +86,5 @@ class _EjaraAppState extends State<EjaraApp> {
       statusBarIconBrightness: Brightness.dark,
       statusBarBrightness: Brightness.light,
     ));
-  }
-
-  @override
-  void dispose() async {
-    await widget.dependencyManager.dispose();
-    super.dispose();
   }
 }

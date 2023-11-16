@@ -20,7 +20,7 @@ class _ChoosePaymentMethodViewState extends State<ChoosePaymentMethodView> with 
   @override
   void initState() {
     viewModel = ChoosePaymentMethodVM();
-    viewModel.getStarted();
+    viewModel.init();
     super.initState();
   }
 
@@ -68,12 +68,13 @@ class _ChoosePaymentMethodViewState extends State<ChoosePaymentMethodView> with 
                   ),
                   Builder(builder: (context) {
                     if (model.paymentTypeList.isEmpty) {
-                      return const Text("Empty list");
+                      return const Padding(padding: EdgeInsets.only(top: 80), child: Text("Empty list"));
                     } else if (model.hasError) {
                       return Text(model.modelError);
                     }
                     return ListView.separated(
                       itemCount: model.paymentTypeList.length,
+                      shrinkWrap: true,
                       itemBuilder: (c, i) {
                         final payment = model.paymentTypeList.elementAt(i);
                         return PaymentMethodTile(

@@ -11,20 +11,25 @@ class ChoosePaymentMethodVM extends BaseViewModel {
 
   List<PaymentType> paymentTypeList = [];
 
-  Future<void> getStarted() async {
+  Future<void> init() async {
     _logger.info("initializing");
     setBusy(true);
     try {
-      final isSuccessful = await _serviceApi.login();
+      // firstly run the login function to
+      //generate bearer token
+      final res = await _serviceApi.login();
+      if (!res) return;
 
-      if (isSuccessful) {
-        final response = await _serviceApi.fetchPaymentMethods();
-        paymentTypeList = response;
-        notifyListeners();
-      }
+      // when login is successfully, fetch payment methods
+      final response = await _serviceApi.fetchPaymentMethods();
+      // assign your response to the paymentTypeList
+      paymentTypeList = response;
+      notifyListeners();
     } catch (e) {
       setError("Error occured at this time");
       _logger.severe("Error happened at this time");
+    } finally {
+      setBusy(false);
     }
   }
 

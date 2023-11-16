@@ -8,6 +8,7 @@ import 'package:logging/logging.dart';
 class AppInterceptor extends Interceptor with Utilities {
   final _logger = Logger("AppInterceptor");
   final _secureStorageService = serviceLocator.get<SecureStorageService>();
+
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     String? token = await _secureStorageService.readAccessToken();

@@ -32,17 +32,16 @@ class ServiceApi {
 
     Map<String, dynamic> queryParams = {
       "countryCode": "CM",
-      "transactionType": "CmKVGexi%buy!u65BI7PlR5",
+      "transactionType": "buy",
     };
     try {
       final response = await _networkService.get(
         "/marketplace/payment-types-per-country",
-        isV2: true,
         queryParameters: queryParams,
       );
+      print("response --> ${response["data"]}");
 
       return List<PaymentType>.from(response["data"].map((e) => PaymentType.fromJson(e)));
-      
     } catch (e) {
       rethrow;
     }

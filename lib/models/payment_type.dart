@@ -1,7 +1,7 @@
 class PaymentType {
-  String? id, code, titleEn, titleFr;
+  String? code, titleEn, titleFr;
   String? descriptionEn, descriptionFr;
-  int? minAmount;
+  int? id, minAmount;
 
   PaymentType({this.id, this.code, this.titleEn, this.titleFr, this.descriptionEn, this.descriptionFr, this.minAmount});
 

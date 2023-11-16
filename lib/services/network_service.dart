@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:ejara_test/services/environment.dart';
 import 'package:ejara_test/services/interceptor/app_interceptor.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
@@ -7,16 +6,21 @@ import 'package:logging/logging.dart';
 class NetworkService {
   final _logger = Logger("NetworkService");
   late final Dio dio;
+  late final Dio dio2;
 
-  static final String _baseUrlV1 = Environment.current.baseUrlV1;
-  static final String _baseUrlV2 = Environment.current.baseUrlV2;
-
-  bool useV2 = false;
+  final String _baseUrlV1 = "https://testbox-nellys-coin.ejaraapis.xyz/api/v1";
+  final String _baseUrlV2 = "https://testbox-nellys-coin.ejaraapis.xyz/api/v2";
 
   NetworkService() {
     dio = Dio(
       BaseOptions(
-        baseUrl: useV2 ? _baseUrlV2 : _baseUrlV1,
+        baseUrl: _baseUrlV1,
+        connectTimeout: const Duration(seconds: 30),
+      ),
+    );
+    dio2 = Dio(
+      BaseOptions(
+        baseUrl: _baseUrlV2,
         connectTimeout: const Duration(seconds: 30),
       ),
     );
@@ -32,22 +36,31 @@ class NetworkService {
         ),
         AppInterceptor(),
       ]);
+      dio2.interceptors.addAll([
+        LogInterceptor(
+          responseBody: true,
+          error: true,
+          requestHeader: true,
+          responseHeader: false,
+          request: false,
+          requestBody: true,
+        ),
+        AppInterceptor(),
+      ]);
     }
     dio.interceptors.add(AppInterceptor());
+    dio2.interceptors.add(AppInterceptor());
   }
 
   Future get(
     String path, {
     Map<String, dynamic>? queryParameters,
-    bool isV2 = true,
   }) async {
-    useV2 = isV2;
     try {
-      Response response = await dio.get(
+      Response response = await dio2.get(
         path,
         queryParameters: queryParameters,
       );
-
       return response.data;
     } on DioException catch (e) {
       _handleError(e);
