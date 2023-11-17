@@ -30,7 +30,7 @@ class _AddMobileMoneyViewState extends State<AddMobileMoneyView> {
           create: (_) => viewModel,
           child: Consumer<AddMobileMoneyVM>(builder: (_, model, __) {
             List<Widget> stackedChildren = [content, footer];
-    
+
             return Stack(
               alignment: Alignment.bottomCenter,
               children: stackedChildren,
@@ -148,7 +148,13 @@ class _AddMobileMoneyViewState extends State<AddMobileMoneyView> {
         }
         return PrimaryButton(
           margin: const EdgeInsets.all(20),
-          buttonConfig: ButtonConfig(text: "Continue", action: () {}),
+          buttonConfig: ButtonConfig(
+              text: "Continue",
+              action: () {
+                if (Navigator.canPop(context)) {
+                  Navigator.pop(context);
+                }
+              }),
         );
       }),
     );

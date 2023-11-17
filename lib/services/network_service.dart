@@ -53,7 +53,24 @@ class NetworkService {
     dio2.interceptors.add(AppInterceptor());
   }
 
-  Future get(
+  Future getV1(
+    String path, {
+    Map<String, dynamic>? queryParameters,
+  }) async {
+    try {
+      Response response = await dio.get(
+        path,
+        queryParameters: queryParameters,
+      );
+      return response.data;
+    } on DioException catch (e) {
+      _handleError(e);
+    } catch (e, s) {
+      _logger.severe('Could not make a request to this path: $path', e, s);
+    }
+  }
+
+  Future getV2(
     String path, {
     Map<String, dynamic>? queryParameters,
   }) async {

@@ -38,12 +38,33 @@ class ServiceApi {
       "transactionType": "buy",
     };
     try {
-      final response = await _networkService.get(
+      final response = await _networkService.getV2(
         "/marketplace/payment-types-per-country",
         queryParameters: queryParams,
       );
 
       return List<PaymentType>.from(response["data"].map((e) => PaymentType.fromJson(e)));
+    }  on TokenExpiryException {
+      rethrow;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+   Future<List<dynamic>> fetchPaymentSettingsPerMethod(int? id) async {
+    _logger.info('fetch payment settings per method tiggered');
+
+    Map<String, dynamic> queryParams = {
+      "paymentTypeId": id,
+      "countryCode": "CM",
+      "transactionType": "buy",
+    };
+    try {
+      final response = await _networkService.getV1(
+        "/customer/payment-settings-per-type",
+        queryParameters: queryParams,
+      );
+      return List<dynamic>.from(response["data"].map((x) => x));
     }  on TokenExpiryException {
       rethrow;
     } catch (e) {
