@@ -16,9 +16,15 @@ void main() {
       getAndRegisterAppLevelRouter();
       mockServiceApi = MockServiceApi();
       viewModel = ChoosePaymentMethodVM(mockServiceApi);
-      
     });
     tearDown(() => serviceLocator.reset());
+
+    void arrangeSuccessResponseFromServiceApi() {
+      when(() => mockServiceApi.login()).thenAnswer((_) async => true);
+
+      when(() => mockServiceApi.fetchPaymentMethods())
+          .thenAnswer((_) async => [PaymentType(id: 1, code: "Momo", descriptionEn: "english", titleEn: "French")]);
+    }
 
     group('initial values', () {
       test("test that list is empty at the start", () {
@@ -30,11 +36,7 @@ void main() {
       });
 
       test("test that init returns payment method successfully", () async {
-        when(() => mockServiceApi.login()).thenAnswer((_) async => true);
-
-        when(() => mockServiceApi.fetchPaymentMethods())
-            .thenAnswer((_) async => [PaymentType(id: 1, code: "Momo", descriptionEn: "english", titleEn: "French")]);
-
+        arrangeSuccessResponseFromServiceApi();
         await viewModel.init();
         expect(viewModel.paymentTypeList, isNotEmpty);
       });

@@ -39,7 +39,7 @@ class _ChoosePaymentMethodViewState extends State<ChoosePaymentMethodView> with 
                  const SliverToBoxAdapter(
                   child: Column(
                     children: [
-                      OneActionAppBar(),
+                    OneActionAppBar(),
                     SizedBox(
                       height: 15,
                     ),
@@ -57,8 +57,9 @@ class _ChoosePaymentMethodViewState extends State<ChoosePaymentMethodView> with 
                       padding: EdgeInsets.only(left: 20),
                       child: Align(
                         alignment: Alignment.centerLeft,
-                        child: Text(
+                        child: Text(                          
                           "Select a payment method",
+                          key: Key("select-a-payment-method"),
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontWeight: FontWeight.w700,

@@ -13,7 +13,6 @@ class EjaraApp extends StatefulWidget {
 }
 
 class _EjaraAppState extends State<EjaraApp> {
-  bool dependencyLoaded = false;
   Logger logger = Logger("_EjaraAppState");
 
   @override
