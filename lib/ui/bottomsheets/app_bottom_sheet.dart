@@ -86,6 +86,7 @@ mixin AppBottomSheet {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: TextButton(
+                  key: const Key("text-button"),
                   onPressed: () {
                     if (Navigator.canPop(context)) {
                       Navigator.pop(context, true);
