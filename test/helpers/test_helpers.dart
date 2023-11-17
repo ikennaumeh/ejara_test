@@ -22,3 +22,4 @@ void _removeRegistrationIfExists<T extends Object>() {
     serviceLocator.unregister<T>();
   }
 }
+

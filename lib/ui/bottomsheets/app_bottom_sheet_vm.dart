@@ -5,21 +5,20 @@ import 'package:logging/logging.dart';
 
 class AppBottomSheetVM extends BaseViewModel {
   final _logger = Logger("AppBottomSheetVM");
-  final  ServiceApi _serviceApi = serviceLocator.get<ServiceApi>();
+  late ServiceApi _serviceApi;
 
   List paymentSettingsMethods = [];
   final int? id;
 
-  AppBottomSheetVM([this.id]) {
-    _init();
+  AppBottomSheetVM([this.id, ServiceApi? api]) {
+    _serviceApi = api ?? serviceLocator.get<ServiceApi>();
+     fetchMethods();    
   }
 
-  void _init() async {
+  Future<void> fetchMethods() async {
     setBusy(true);
     _logger.info("fetching payment settings method");
     try {
-      // firstly run the login function to
-      //generate bearer token
       final res = await _serviceApi.fetchPaymentSettingsPerMethod(id);
       paymentSettingsMethods = res;
       notifyListeners();
