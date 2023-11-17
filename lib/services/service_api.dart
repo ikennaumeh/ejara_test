@@ -1,5 +1,6 @@
 import 'package:ejara_test/models/login_response.dart';
 import 'package:ejara_test/models/payment_type.dart';
+import 'package:ejara_test/services/exceptions/token_expiry_exception.dart';
 import 'package:ejara_test/services/network_service.dart';
 import 'package:ejara_test/services/secure_storage_service.dart';
 import 'package:ejara_test/services/service_locator.dart';
@@ -22,6 +23,8 @@ class ServiceApi {
       final res = LoginResponse.fromJson(response);
       await _secureStorage.writeAccessToken(token: res.token);
       return res.token != null;
+    } on TokenExpiryException {
+      rethrow;
     } catch (e) {
       rethrow;
     }
@@ -39,9 +42,10 @@ class ServiceApi {
         "/marketplace/payment-types-per-country",
         queryParameters: queryParams,
       );
-      print("response --> ${response["data"]}");
 
       return List<PaymentType>.from(response["data"].map((e) => PaymentType.fromJson(e)));
+    }  on TokenExpiryException {
+      rethrow;
     } catch (e) {
       rethrow;
     }

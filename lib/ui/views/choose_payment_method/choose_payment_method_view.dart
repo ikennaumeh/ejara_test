@@ -34,75 +34,80 @@ class _ChoosePaymentMethodViewState extends State<ChoosePaymentMethodView> with 
             return const FullScreenLoadingIndicator();
           }
           return SafeArea(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  const OneActionAppBar(),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  const Text(
-                    "Choose a payment \nmethod",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 27,
-                      color: Color(0xff393e7c),
+            child: CustomScrollView(
+              slivers: [
+                 const SliverToBoxAdapter(
+                  child: Column(
+                    children: [
+                      OneActionAppBar(),
+                    SizedBox(
+                      height: 15,
                     ),
-                  ),
-                  const WalletCard(),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 20),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        "Select a payment method",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 16,
-                          color: Color(0xff393e7c),
+                    Text(
+                      "Choose a payment \nmethod",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 27,
+                        color: Color(0xff393e7c),
+                      ),
+                    ),
+                    WalletCard(),
+                    Padding(
+                      padding: EdgeInsets.only(left: 20),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Select a payment method",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 16,
+                            color: Color(0xff393e7c),
+                          ),
                         ),
                       ),
                     ),
+                    ],
                   ),
-                  Builder(builder: (context) {
+                ),
+                Builder(
+                  builder: (context) {
                     if (model.paymentTypeList.isEmpty) {
-                      return const Padding(padding: EdgeInsets.only(top: 80), child: Text("Empty list"));
-                    } else if (model.hasError) {
-                      return Text(model.modelError);
-                    }
-                    return ListView.separated(
-                      itemCount: model.paymentTypeList.length,
-                      shrinkWrap: true,
+                        return const SliverToBoxAdapter(child:  Padding(padding: EdgeInsets.only(top: 80), child: Text("Empty list")));
+                      } else if (model.hasError) {
+                        return SliverToBoxAdapter(child: Text(model.modelError));
+                      }
+                    return SliverList.separated(
+                      itemCount: viewModel.paymentTypeList.length,
                       itemBuilder: (c, i) {
-                        final payment = model.paymentTypeList.elementAt(i);
-                        return PaymentMethodTile(
-                          title: payment.titleEn,
-                          subtitle: payment.descriptionEn,
-                          icon: switch (i) {
-                            0 => Icons.currency_bitcoin_sharp,
-                            1 => Icons.phone_android_outlined,
-                            _ => Icons.account_balance
-                          },
-                          ontap: () async {
-                            final result = await showAppBottomSheet();
-                            if (result == true) {
-                              model.routeToNextScreen();
-                            }
-                          },
-                        );
-                      },
-                      separatorBuilder: (c, i) {
-                        return const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 20),
-                          child: Divider(),
-                        );
-                      },
+                          final payment = model.paymentTypeList.elementAt(i);
+                          return PaymentMethodTile(
+                            title: payment.titleEn,
+                            subtitle: payment.descriptionEn,
+                            icon: switch (i) {
+                              0 => Icons.currency_bitcoin_sharp,
+                              1 => Icons.phone_android_outlined,
+                              _ => Icons.account_balance
+                            },
+                            ontap: () async {
+                              final result = await showAppBottomSheet();
+                              if (result == true) {
+                                model.routeToNextScreen();
+                              }
+                            },
+                          );
+                        },
+                        separatorBuilder: (c, i) {
+                          return const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            child: Divider(),
+                          );
+                        },
                     );
-                  }),
-                ],
-              ),
+                  }
+                ),
+              ],
             ),
           );
         }),

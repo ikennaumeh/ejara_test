@@ -1,0 +1,1 @@
+class TokenExpiryException implements Exception {}

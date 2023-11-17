@@ -7,13 +7,17 @@ import 'package:logging/logging.dart';
 
 class ChoosePaymentMethodVM extends BaseViewModel {
   final _logger = Logger("ChoosePaymentMethodVM");
-  final _serviceApi = serviceLocator.get<ServiceApi>();
+  late ServiceApi _serviceApi;
+
+  ChoosePaymentMethodVM([ServiceApi? api]) {
+    _serviceApi = api ?? serviceLocator.get<ServiceApi>();
+  }
 
   List<PaymentType> paymentTypeList = [];
 
   Future<void> init() async {
-    _logger.info("initializing");
     setBusy(true);
+    _logger.info("initializing");
     try {
       // firstly run the login function to
       //generate bearer token

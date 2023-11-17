@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:ejara_test/services/exceptions/token_expiry_exception.dart';
 import 'package:ejara_test/services/interceptor/app_interceptor.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
@@ -89,5 +90,11 @@ class NetworkService {
     }
   }
 
-  void _handleError(DioException e) {}
+  void _handleError(DioException e) {
+    if (e.response?.statusCode == 401) {
+      throw TokenExpiryException();
+    }
+  }
 }
+
+
